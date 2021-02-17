@@ -1,8 +1,34 @@
 
-import Datastore from 'nedb';
+import Datastore from 'nedb-promises';
+import {User} from "./model/User";
+import {MODEL_PARSE_SYMBOL} from "./model/Model";
 
+let databaseLoaded = false;
+const usersDB = new Datastore({ filename: 'users.db' });
+async function loadDatabases() {
+    await usersDB.load();
+    usersDB.ensureIndex( { "fieldName": "name", unique: true })
+    usersDB.ensureIndex( { "fieldName": "id", unique: true })
+    databaseLoaded = true;
+}
 
-const db = new Datastore({ filename: 'database.db' });
-db.loadDatabase(function (err) {    // Callback is optional
-    // Now commands will be executed
-});
+loadDatabases()
+
+const getUserByName = async (name: string): Promise<User|null> => {
+    const data = await usersDB.find({name});
+    if (!data) return null;
+    const user = User[MODEL_PARSE_SYMBOL](data);
+    console.log(user);
+    return user
+}
+const createUser = async (name: string, password: string): Promise<User|null> => {
+    const data = await usersDB.insert({name, password});
+    const user = User[MODEL_PARSE_SYMBOL](data);
+    console.log(user);
+    return user
+}
+
+export const databaseService = {
+    getUserByName,
+    createUser
+}

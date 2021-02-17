@@ -24,8 +24,10 @@
     "express-ws": "^4.0.0",
     "keygrip": "^1.1.0",
     "nedb": "^1.8.0",
+    "nedb-promises": "^4.1.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
+    "svg-captcha-express": "^1.0.8",
     "ws": "^7.4.3"
   },
   "devDependencies": {

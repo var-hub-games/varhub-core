@@ -1098,6 +1098,13 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
+nedb-promises@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/nedb-promises/-/nedb-promises-4.1.1.tgz#12440215a1b1e62ca6655ee2242bf72903fcb984"
+  integrity sha512-Y10f3r4FdcSy/6NlGnI2i9GxCf5KsPtYhlVEkXrKTqvFJ+ybJcoSBncgSm9G1W9QbtpecjJ6vYd7CGf54SNnbw==
+  dependencies:
+    nedb "^1.8.0"
+
 nedb@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/nedb/-/nedb-1.8.0.tgz#0e3502cd82c004d5355a43c9e55577bd7bd91d88"
@@ -1180,6 +1187,13 @@ once@^1.3.0, once@^1.3.1, once@^1.4.0:
   integrity sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
   dependencies:
     wrappy "1"
+
+opentype.js@0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/opentype.js/-/opentype.js-0.7.3.tgz#40fb8ce18bfd60e74448efdfe442834098397aab"
+  integrity sha1-QPuM4Yv9YOdESO/f5EKDQJg5eqs=
+  dependencies:
+    tiny-inflate "^1.0.2"
 
 p-cancelable@^1.0.0:
   version "1.1.0"
@@ -1590,10 +1604,22 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
+svg-captcha-express@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/svg-captcha-express/-/svg-captcha-express-1.0.8.tgz#484090104550c68fd1b6219183979ff55028a15d"
+  integrity sha512-Wiy7wLRxMqcDYQl8JhpcpGb7aAoiIiJxD+43eeb7Zqo0SwKN8R8ETOJ69PuPwzE+XnSJvb9qepOLm6taQA823w==
+  dependencies:
+    opentype.js "0.7.3"
+
 term-size@^2.1.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/term-size/-/term-size-2.2.1.tgz#2a6a54840432c2fb6320fea0f415531e90189f54"
   integrity sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==
+
+tiny-inflate@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/tiny-inflate/-/tiny-inflate-1.0.3.tgz#122715494913a1805166aaf7c93467933eea26c4"
+  integrity sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==
 
 to-readable-stream@^1.0.0:
   version "1.0.0"

@@ -8,6 +8,7 @@ import cookieSession from "cookie-session";
 import cors from "cors";
 import Keygrip from "keygrip";
 import expressSession from "express-session"
+import {checkCaptcha, initCaptcha} from "./auth/captcha.init";
 
 export function createWebConnector() {
 
@@ -26,6 +27,7 @@ export function createWebConnector() {
         resave: false,
         saveUninitialized: true
     }));
+    initCaptcha(expressApp);
     initPassport(expressApp);
 
 
@@ -40,17 +42,18 @@ export function createWebConnector() {
         console.log(req.user);
         res.send(`
             <p>Hello, ${(req.user as any)?.username}</p>
+            <img src="/api/captcha"/>
             <script>
-                function login() {
+                function login(captcha) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/login', true);
+                    xhr.open('POST', '/loginN', true);
                     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                     
                     xhr.onload = function () {
                       // Запрос завершен. Здесь можно обрабатывать результат.
                     };
                     
-                    xhr.send(JSON.stringify({username: "MYXOMOPX", password: "123"}));
+                    xhr.send(JSON.stringify({username: "MYXOMOPX", password: "12345", captcha:captcha}));
                 }
             </script>
             <button onclick="login()">Login as MYXOMOPX</button>
@@ -66,6 +69,13 @@ export function createWebConnector() {
             <p>Success, ${req.user}</p>
         `)
     })
+
+    expressWsApp.post('/loginN', (req, res) => {
+        res.type('html');
+        res.end(`
+            <p>CAPTCHA VALID: ${checkCaptcha(req)}</p>
+        `);
+    });
 
     return expressApp;
 }

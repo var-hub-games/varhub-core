@@ -6,7 +6,8 @@
     "build": "tsc --project tsconfig.json",
     "buildWatch": "tsc --project tsconfig.json -w",
     "nodemon": "nodemon --watch  dist",
-    "start": "concurrently \\\"npm:buildWatch\\\" \\\"npm:nodemon\\\""
+    "startDemon": "concurrently \\\"npm:buildWatch\\\" \\\"npm:nodemon\\\"",
+    "start": "node dist/index.js"
   },
   "authors": [
     "MYXOMOPX",

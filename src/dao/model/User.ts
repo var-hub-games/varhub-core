@@ -12,11 +12,11 @@ export class User extends Model {
         if (password) this.password = password;
     }
 
-    toViewModel(): any {
-        return {
+    toViewJSON(): string {
+        return JSON.stringify({
             id: this.id,
             name: this.name
-        };
+        });
     }
 
     static [MODEL_PARSE_SYMBOL](data: any): User {

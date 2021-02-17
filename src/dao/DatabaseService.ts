@@ -8,7 +8,6 @@ const usersDB = new Datastore({ filename: 'users.db' });
 async function loadDatabases() {
     await usersDB.load();
     usersDB.ensureIndex( { "fieldName": "name", unique: true })
-    usersDB.ensureIndex( { "fieldName": "id", unique: true })
     databaseLoaded = true;
 }
 
@@ -16,12 +15,18 @@ loadDatabases()
 
 const getUserByName = async (name: string): Promise<User|null> => {
     const data = await usersDB.find({name});
-    if (!data) return null;
-    const user = User[MODEL_PARSE_SYMBOL](data);
-    console.log(user);
+    console.log("GET USER BY NAME",data)
+    if (!data || !data.length) return null;
+    const user = User[MODEL_PARSE_SYMBOL](data[0]);
     return user
 }
-const createUser = async (name: string, password: string): Promise<User|null> => {
+const getUserById = async (id: string): Promise<User|null> => {
+    const data = await usersDB.find({_id: id});
+    if (!data || !data.length) return null;
+    const user = User[MODEL_PARSE_SYMBOL](data[0]);
+    return user
+}
+const createUser = async (name: string, password: string): Promise<User> => {
     const data = await usersDB.insert({name, password});
     const user = User[MODEL_PARSE_SYMBOL](data);
     console.log(user);
@@ -30,5 +35,6 @@ const createUser = async (name: string, password: string): Promise<User|null> =>
 
 export const databaseService = {
     getUserByName,
-    createUser
+    createUser,
+    getUserById
 }

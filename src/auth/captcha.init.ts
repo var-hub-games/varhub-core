@@ -5,11 +5,15 @@ const captchaConfig = {
     sessionId: "captcha",
     fieldName: "captcha",
     caseSensitive: false,
-    url: "/api/captcha",
+    url: "/api/auth/captcha",
 }
 
 export const captcha = expressCaptcha.create({
-    cookie: captchaConfig.sessionId
+    cookie: captchaConfig.sessionId,
+    background: "rgb(0,0,0)",
+    noise: 3,
+    size: 5,
+    charPreset: 'abcdefghijklmnopqrstuvwxyz0123456789',
 })
 
 export const initCaptcha = (expressApp: Express) => {

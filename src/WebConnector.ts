@@ -9,6 +9,7 @@ import cors from "cors";
 import Keygrip from "keygrip";
 import expressSession from "express-session"
 import {checkCaptcha, initCaptcha} from "./auth/captcha.init";
+import {registerAuthRequests} from "./auth/auth.requests";
 
 export function createWebConnector() {
 
@@ -29,6 +30,7 @@ export function createWebConnector() {
     }));
     initCaptcha(expressApp);
     initPassport(expressApp);
+    registerAuthRequests(expressApp);
 
 
     expressWsApp.ws("/echo", (ws, req) => {
@@ -41,22 +43,32 @@ export function createWebConnector() {
     expressApp.get('/', (req, res) => {
         console.log(req.user);
         res.send(`
-            <p>Hello, ${(req.user as any)?.username}</p>
-            <img src="/api/captcha"/>
+            <p>Hello, ${(req.user as any)?.name}</p>
+            <img src="/api/auth/captcha"/>
             <script>
-                function login(captcha) {
+                function login(name, password, captcha) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', '/loginN', true);
+                    xhr.open('POST', '/api/auth/login', true);
                     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                     
                     xhr.onload = function () {
                       // Запрос завершен. Здесь можно обрабатывать результат.
                     };
                     
-                    xhr.send(JSON.stringify({username: "MYXOMOPX", password: "12345", captcha:captcha}));
+                    xhr.send(JSON.stringify({name, password}));
+                }
+                function register(name, password, captcha) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/api/auth/register', true);
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    
+                    xhr.onload = function () {
+                      // Запрос завершен. Здесь можно обрабатывать результат.
+                    };
+                    
+                    xhr.send(JSON.stringify({name, password, captcha}));
                 }
             </script>
-            <button onclick="login()">Login as MYXOMOPX</button>
         `)
         // res.send('Hello World!'+"AUTHED"+req.isAuthenticated()+" user")
     })

@@ -2,8 +2,8 @@ export const MODEL_PARSE_SYMBOL = Symbol("ParseModelFromDB")
 
 export abstract class Model {
 
-    toViewModel() {
-        return {...this}
+    toViewJSON(): string {
+        return JSON.stringify({...this})
     }
 
     static [MODEL_PARSE_SYMBOL](data: any) {

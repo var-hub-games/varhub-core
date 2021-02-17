@@ -23,6 +23,7 @@
     "express-session": "^1.17.1",
     "express-ws": "^4.0.0",
     "keygrip": "^1.1.0",
+    "md5": "^2.3.0",
     "nedb": "^1.8.0",
     "nedb-promises": "^4.1.1",
     "passport": "^0.4.1",

@@ -14,16 +14,17 @@ async function loadDatabases() {
 loadDatabases()
 
 const getUserByName = async (name: string): Promise<User|null> => {
-    const data = await usersDB.find({name});
-    console.log("GET USER BY NAME",data)
-    if (!data || !data.length) return null;
-    const user = User[MODEL_PARSE_SYMBOL](data[0]);
+    const data = await usersDB.findOne({
+        name: { $regex: new RegExp("^" + name.toLowerCase(), "i") }
+    });
+    if (!data) return null;
+    const user = User[MODEL_PARSE_SYMBOL](data);
     return user
 }
 const getUserById = async (id: string): Promise<User|null> => {
-    const data = await usersDB.find({_id: id});
-    if (!data || !data.length) return null;
-    const user = User[MODEL_PARSE_SYMBOL](data[0]);
+    const data = await usersDB.findOne({_id: id});
+    if (!data) return null;
+    const user = User[MODEL_PARSE_SYMBOL](data);
     return user
 }
 const createUser = async (name: string, password: string): Promise<User> => {

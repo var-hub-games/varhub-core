@@ -48,6 +48,7 @@ export const registerAuthRequests = (expressApp: Express) => {
         res.send('"OK"')
     })
 
+    const NAME_REGEX = /^([a-z]|[A-Z]|[0-9]|_|-){2,}$/gm;
     expressApp.post("/api/auth/register", isNotAuthenticatedMiddleware, async (req, res) => {
         const body = req.body;
         const {name, password} = body;
@@ -56,13 +57,18 @@ export const registerAuthRequests = (expressApp: Express) => {
             res.send('"All fields must be provided: name, password"');
             return;
         }
+        if (!name.match(NAME_REGEX)) {
+            res.statusCode = 400;
+            res.send('"Bad username"');
+            return;
+        }
         const validCaptcha = checkCaptcha(req)
         if (!validCaptcha) {
             res.statusCode = 400;
             res.send('"Invalid captcha"');
             return;
         }
-        const alreadyUser = await databaseService.getUserByName("name");
+        const alreadyUser = await databaseService.getUserByName(name);
         if (alreadyUser) {
             res.statusCode = 400;
             res.send('"Name already occupied"');

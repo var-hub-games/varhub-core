@@ -46,7 +46,7 @@ export function createWebConnector() {
             <p>Hello, ${(req.user as any)?.name}</p>
             <img src="/api/auth/captcha"/>
             <script>
-                function login(name, password, captcha) {
+                function login(name, password) {
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/api/auth/login', true);
                     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -67,6 +67,9 @@ export function createWebConnector() {
                     };
                     
                     xhr.send(JSON.stringify({name, password, captcha}));
+                }
+                function logout() {
+                    fetch("/api/auth/logout", {method: "POST"})
                 }
             </script>
         `)

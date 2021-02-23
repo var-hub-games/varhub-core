@@ -10,6 +10,7 @@ import Keygrip from "keygrip";
 import expressSession from "express-session"
 import {checkCaptcha, initCaptcha} from "./auth/captcha.init";
 import {registerAuthRequests} from "./auth/auth.requests";
+import {initTokenManagerRequests} from "./auth/tokenManager";
 
 export function createWebConnector() {
 
@@ -31,6 +32,7 @@ export function createWebConnector() {
     initCaptcha(expressApp);
     initPassport(expressApp);
     registerAuthRequests(expressApp);
+    initTokenManagerRequests(expressApp)
 
 
     expressWsApp.ws("/echo", (ws, req) => {

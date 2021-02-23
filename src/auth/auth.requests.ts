@@ -48,7 +48,7 @@ export const registerAuthRequests = (expressApp: Express) => {
         res.send('"OK"')
     })
 
-    const NAME_REGEX = /^([a-z]|[A-Z]|[0-9]|_|-){2,}$/gm;
+    const NAME_REGEX = /^([a-z]|[A-Z]|[0-9]|_|-){2,12}$/gm;
     expressApp.post("/api/auth/register", isNotAuthenticatedMiddleware, async (req, res) => {
         const body = req.body;
         const {name, password} = body;

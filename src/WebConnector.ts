@@ -1,4 +1,4 @@
-import express from "express"
+import express, {Express} from "express"
 import expressWs from "express-ws"
 import passport from "passport";
 import {initPassport} from "./auth/passport.init"
@@ -12,7 +12,7 @@ import {checkCaptcha, initCaptcha} from "./auth/captcha.init";
 import {registerAuthRequests} from "./auth/auth.requests";
 import {initTokenManagerRequests} from "./auth/tokenManager";
 
-export function createWebConnector() {
+export function createWebConnector(): Express {
 
 
     const expressApp = express();
@@ -80,6 +80,7 @@ export function createWebConnector() {
 
 
 
+
     expressApp.get('/success', (req, res) => {
         console.log("SUCCESS",req.user);
         res.send(`
@@ -93,6 +94,30 @@ export function createWebConnector() {
             <p>CAPTCHA VALID: ${checkCaptcha(req)}</p>
         `);
     });
+
+    const roomCreateHtmlPath = require.resolve('@varhub-games/commutator/dist/roomCreate.html');
+    expressApp.get('/room/create', (req, res) => {
+        res.sendFile(roomCreateHtmlPath);
+    });
+
+    const roomConnectHtmlPath = require.resolve('@varhub-games/commutator/dist/connect.html');
+    expressApp.get('/room/connect', (req, res) => {
+        res.sendFile(roomConnectHtmlPath);
+    });
+
+    const roomJoinHtmlPath = require.resolve('@varhub-games/commutator/dist/roomJoin.html');
+    expressApp.get('/room/:id/join', (req, res) => {
+        res.sendFile(roomJoinHtmlPath);
+    });
+
+    expressApp.use('/assets', express.static('./node_modules/@varhub-games/commutator/dist/assets'));
+    expressApp.use('/css', express.static('./node_modules/@varhub-games/commutator/dist/css'));
+    expressApp.use('/style', express.static('./node_modules/@varhub-games/commutator/dist/style'));
+    expressApp.use('/webfonts', express.static('./node_modules/@varhub-games/commutator/dist/webfonts'));
+    expressApp.use('/connect.js', express.static('./node_modules/@varhub-games/commutator/dist/connect.js'));
+    expressApp.use('/index.js', express.static('./node_modules/@varhub-games/commutator/dist/index.js'));
+    expressApp.use('/roomCreate.js', express.static('./node_modules/@varhub-games/commutator/dist/roomCreate.js'));
+    expressApp.use('/roomJoin.js', express.static('./node_modules/@varhub-games/commutator/dist/roomJoin.js'));
 
     return expressApp;
 }

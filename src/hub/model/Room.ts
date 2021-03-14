@@ -1,31 +1,40 @@
 import {IUserInfo} from "./IUserInfo";
 import {IDoor} from "./IDoor";
+import {VarHub} from "../VarHub";
+import {IConnectionInfo} from "./IConnectionInfo";
+import {User} from "../../dao/model/User";
 
 export class Room {
     readonly roomId: string // new room id
     readonly ownerId: string // UserInfo.id
+    private permit = new Set<string>();
     // owned: boolean // is it your room
-    handlerUrl: string
+    readonly handlerUrl: string
     state: any // any json*
-    users: IUserInfo[]
+    connections: IConnectionInfo[]
     door: IDoor|null
 
-    constructor(userId: string) {
+    constructor(private varHub: VarHub, userId: string, handlerUrl: string) {
+        this.handlerUrl = handlerUrl;
         this.ownerId = userId;
         this.roomId = generateRoomId();
     }
 
-    getRoomInfo = (userId?: string) => {
-        const {roomId, handlerUrl, state, users, door, ownerId} = this;
-        const owned = (userId == ownerId)
-        return {
-            roomId,
-            handlerUrl,
-            state,
-            users,
-            door,
-            owned
+    isPermittedFor(user: User): boolean{
+        return this.permit.has(user.id);
+    }
+
+    setPermittedFor(user: User, value: boolean): boolean{
+        if (value) {
+            this.permit.add(user.id);
+        } else {
+            this.permit.delete(user.id)
         }
+        return value;
+    }
+
+    destroy(): void{
+
     }
 }
 

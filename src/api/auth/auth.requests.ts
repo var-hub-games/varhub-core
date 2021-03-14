@@ -10,7 +10,7 @@ import {isAuth, isNotAuth} from "../../middlewares/authMiddleware";
 
 export const authRouter: Router = Router();
 
-authRouter.post("/login", [isNotAuth], (req, res, next) => {
+authRouter.post("/login", isNotAuth, (req, res, next) => {
     passport.authenticate('local', function(err, user, info) {
         if (err) { return next(err); }
         if (!user) {
@@ -25,18 +25,18 @@ authRouter.post("/login", [isNotAuth], (req, res, next) => {
     })(req, res, next);
 });
 
-authRouter.get("/me", [isAuth], (req, res) => {
+authRouter.get("/me", isAuth, (req, res) => {
     res.send((req.user as User).toViewJSON())
 })
 
-authRouter.post("/logout", [isAuth], (req, res) => {
+authRouter.post("/logout", isAuth, (req, res) => {
     req.logout();
     res.statusCode = 200;
     res.send('"OK"')
 })
 
 const NAME_REGEX = /^([a-z]|[A-Z]|[0-9]|_|-){2,12}$/gm;
-authRouter.post("/register", [isNotAuth], async (req, res) => {
+authRouter.post("/register", isNotAuth, async (req, res) => {
     const body = req.body;
     const {name, password} = body;
     if (!name || !password) {
@@ -80,7 +80,7 @@ authRouter.post("/register", [isNotAuth], async (req, res) => {
     }
 });
 
-authRouter.get("/token", [isAuth], (req, res, next) => {
+authRouter.get("/token", isAuth, (req, res, next) => {
     const user = req.user as User;
     const token = tokenManager.createUserToken(user);
     res.statusCode = 200;

@@ -1,5 +1,4 @@
 import {RequestHandler} from "express"
-
 export const isAuth: RequestHandler = (req, res, next) => {
     if (req.user) next();
     else {
@@ -7,6 +6,7 @@ export const isAuth: RequestHandler = (req, res, next) => {
         res.send('"You aren\'t authorized"')
     }
 }
+
 export const isNotAuth: RequestHandler = (req, res, next) => {
     if (!req.user) next();
     else {

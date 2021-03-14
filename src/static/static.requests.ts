@@ -20,7 +20,7 @@ staticRouter.get('/room/connect', (req, res) => {
 });
 
 const roomJoinHtmlPath = require.resolve('@varhub-games/commutator/dist/roomJoin.html');
-staticRouter.get('/room/:id/join', (req, res) => {
+staticRouter.get('/room/:id', (req, res) => {
     res.setHeader("X-Frame-Options", "DENY");
     res.sendFile(roomJoinHtmlPath);
 });

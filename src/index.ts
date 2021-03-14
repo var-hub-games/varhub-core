@@ -1,5 +1,5 @@
 import {createWebConnector} from "./WebConnector";
-import {databaseService} from "./dao/DatabaseService";
+import "./index";
 
 const port = 8088
 

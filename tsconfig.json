@@ -18,12 +18,13 @@
       "es2019"
     ],
     "typeRoots": [
-      "../typings/**/*"
+      "../typings/**/*",
+      "src/typings/**/*"
     ]
   },
   "compileOnSave": true,
   "exclude": [
     "node_modules",
     "./**/__test__"
-  ]
+  ],
 }

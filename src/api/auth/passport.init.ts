@@ -1,7 +1,7 @@
 import passport from "passport";
 import {Strategy as LocalStrategy} from "passport-local";
 import {Express} from "express";
-import {databaseService} from "../dao/DatabaseService";
+import {databaseService} from "../../dao/DatabaseService";
 import md5 from "md5";
 
 passport.use(new LocalStrategy({

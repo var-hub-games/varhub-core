@@ -1,6 +1,4 @@
 import {User} from "../dao/model/User";
-import {Express} from "express";
-import {isAuthenticatedMiddleware} from "./auth.requests";
 
 type Token = string;
 
@@ -31,17 +29,4 @@ const getUserByToken = (token: Token): User|undefined => {
 export const tokenManager = {
     createUserToken,
     getUserByToken
-}
-
-export const initTokenManagerRequests = (expressApp: Express) => {
-    expressApp.get("/api/auth/token", isAuthenticatedMiddleware, (req, res, next) => {
-        const user = req.user as User;
-        if (!user) {
-            res.statusCode = 500;
-            res.send('"No user found');
-        }
-        const token = createUserToken(user);
-        res.statusCode = 200;
-        res.send(token);
-    })
 }

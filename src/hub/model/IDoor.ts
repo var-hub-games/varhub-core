@@ -1,4 +1,4 @@
-type DOOR_MODE =
+export type DOOR_MODE =
     | "open"
     | "knock"
     | "closed"
@@ -6,6 +6,6 @@ type DOOR_MODE =
 
 export interface IDoor {
     mode: DOOR_MODE,
-    allowlist: string[],
-    blocklist: string[],
+    allowIds: Set<string>,
+    blockIds: Set<string>,
 }

@@ -1,4 +1,5 @@
 import {Room} from "./model/Room";
+import {User} from "../dao/model/User";
 
 export class VarHub {
 
@@ -18,6 +19,22 @@ export class VarHub {
         room.destroy();
         this.roomMap.delete(room.roomId);
         return true;
+    }
+
+    getAllowedRoomsForUser(user: User): Set<Room>{
+        const rooms = new Set<Room>();
+        for (const room of this.roomMap.values()) {
+            if (room.isPermittedFor(user)) rooms.add(room);
+        }
+        return rooms;
+    }
+
+    getOwnedRoomsForUser(user: User): Set<Room>{
+        const rooms = new Set<Room>();
+        for (const room of this.roomMap.values()) {
+            if (room.ownerId === user.id) rooms.add(room);
+        }
+        return rooms;
     }
 }
 

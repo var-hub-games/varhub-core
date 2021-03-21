@@ -1,6 +1,7 @@
 import {IUserInfo} from "./IUserInfo";
 
 export interface IConnectionInfo {
-    id: string
-    account: IUserInfo
+    readonly id: string
+    readonly account: IUserInfo
+    readonly resource: string
 }

@@ -1,23 +1,24 @@
-import {IUserInfo} from "./IUserInfo";
-import {IDoor} from "./IDoor";
 import {VarHub} from "../VarHub";
-import {IConnectionInfo} from "./IConnectionInfo";
 import {User} from "../../dao/model/User";
+import ws from 'ws';
+import {Connection} from "./Connection";
+import {UserJoinEvent, UserKnockEvent, UserLeaveEvent} from "./messages";
+import {Door} from "./Door";
 
 export class Room {
     readonly roomId: string // new room id
     readonly ownerId: string // UserInfo.id
     private permit = new Set<string>();
-    // owned: boolean // is it your room
     readonly handlerUrl: string
     state: any // any json*
-    connections: IConnectionInfo[]
-    door: IDoor|null
+    readonly connections = new Map<string, Connection>();
+    readonly door: Door;
 
     constructor(private varHub: VarHub, userId: string, handlerUrl: string) {
         this.handlerUrl = handlerUrl;
         this.ownerId = userId;
         this.roomId = generateRoomId();
+        this.door = new Door(this);
     }
 
     isPermittedFor(user: User): boolean{
@@ -33,8 +34,46 @@ export class Room {
         return value;
     }
 
-    destroy(): void{
+    handleNewConnection(ws: ws, user: User, resource: string){
+        const connection = new Connection(ws, user, this, resource);
+        this.door.enterConnection(connection);
+    }
 
+    connect(connection: Connection){
+        this.removeConnection(connection.id, "reconnected");
+        this.connections.set(connection.id, connection);
+        this.broadcast(UserJoinEvent(connection));
+        // todo: send room data to connection
+        connection.ws.addEventListener("close", () => this.onDisconnect(connection));
+    }
+
+    private onDisconnect(connection: Connection){
+        this.removeConnection(connection.id, "disconnected");
+    }
+
+    knock(connection: Connection){
+        this.broadcast(UserKnockEvent(connection.account));
+    }
+
+    removeConnection(connectionId: string, reason: string): boolean{
+        const connection = this.connections.get(connectionId);
+        if (!connection) return false;
+        this.connections.delete(connectionId);
+        this.broadcast(UserLeaveEvent(connection));
+        connection.destroy(reason);
+        return true;
+    }
+
+    private broadcast(message: any){
+        for (const [, connection] of this.connections) {
+            connection.sendMessage(message);
+        }
+    }
+
+    destroy(): void{
+        for (const [, connection] of this.connections) {
+            connection.destroy("room destroyed");
+        }
     }
 }
 

@@ -10,6 +10,7 @@ import {roomIdRouter} from "./roomId.requests";
 import {WithRoomIdParam} from "../../middlewares/roomIdMiddleware";
 import {WithRoomIdWsParam} from "../../middlewares/ws/roomIdWsMiddleware";
 import {Room} from "../../hub/model/Room";
+import {Connection} from "../../hub/model/Connection";
 
 
 export const roomRouter: expressWs.Router = Router();
@@ -42,9 +43,8 @@ roomRouter.put('', isAuth, (req: Request & {user: User}, res) => {
 
 const wsMiddlewares = [sameOrigin, WithRoomIdWsParam('roomId'), UseTokenUser('key')]
 roomRouter.ws("/:roomId/connect", ...wsMiddlewares, (ws, req: Request  & {room: Room, user: User}) => {
-    ws.send("BEST " + req.user.name + " ROOM "+ req.room.roomId);
-    // todo: WS ESTABLISHED
-    ws.close(4099);
+    const resource = String(req.query.resource ?? "");
+    req.room.handleNewConnection(ws, req.user, resource);
 });
 
 roomRouter.use("/:roomId", isAuth, WithRoomIdParam("roomId"), roomIdRouter)

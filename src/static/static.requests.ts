@@ -1,25 +1,26 @@
 import express, { Router } from "express";
+import path from "path";
 
 export const staticRouter: Router = Router();
 
-const indexHtmlPath = require.resolve('./dist/web/index.html');
+const indexHtmlPath = path.resolve('./dist/web/index.html');
 staticRouter.get('/', (req, res) => {
     res.setHeader("X-Frame-Options", "DENY");
     res.sendFile(indexHtmlPath);
 })
 
-const roomCreateHtmlPath = require.resolve('./dist/web/roomCreate.html');
+const roomCreateHtmlPath = path.resolve('./dist/web/roomCreate.html');
 staticRouter.get('/room/create', (req, res) => {
     res.setHeader("X-Frame-Options", "DENY");
     res.sendFile(roomCreateHtmlPath);
 });
 
-const roomConnectHtmlPath = require.resolve('./dist/web/connect.html');
+const roomConnectHtmlPath = path.resolve('./dist/web/connect.html');
 staticRouter.get('/room/connect', (req, res) => {
     res.sendFile(roomConnectHtmlPath);
 });
 
-const roomJoinHtmlPath = require.resolve('./dist/web/roomJoin.html');
+const roomJoinHtmlPath = path.resolve('./dist/web/roomJoin.html');
 staticRouter.get('/room/:id', (req, res) => {
     res.setHeader("X-Frame-Options", "DENY");
     res.sendFile(roomJoinHtmlPath);

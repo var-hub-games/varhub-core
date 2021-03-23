@@ -22,6 +22,26 @@ export function UserKnockEvent(user: IUserInfo): string{
     return VarHubEvent("UserKnockEvent", userToUserInfo(user));
 }
 
+export function AnyMessageEvent<T extends Buffer|string>(fromConnection: string|null, message: T): T extends Buffer ? Buffer : string {
+    if (message instanceof Buffer) {
+        const cidBuffer = fromConnection ? Buffer.from(fromConnection, "utf8") : Buffer.of();
+        const cidLength = Buffer.from(Uint32Array.of(cidBuffer.length).buffer);
+        return Buffer.concat([cidLength, cidBuffer, message]) as any;
+    } else {
+        return VarHubEvent("MessageEvent", {
+            from: fromConnection,
+            message: message
+        }) as any;
+    }
+}
+
+export function RoomStateChangedEvent(path: readonly (string|number)[], value: any): string {
+    return VarHubEvent("RoomStateChangedEvent", {
+        path: path,
+        data: value
+    })
+}
+
 function VarHubEvent(type: string, data: any): string{
     return type + '\n' + JSON.stringify(data);
 }

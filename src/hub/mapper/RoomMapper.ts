@@ -14,7 +14,7 @@ export const roomToRoomInfo = (room: Room, owner: User) => {
 export const roomToRoomOnlineInfo = (room: Room, owner: User) => {
     return {
         ...roomToRoomInfo(room, owner),
-        state: room.state,
+        state: room.getState(),
         door: doorToDoorInfo(room.door),
         users: [...room.connections.values()].map(con => connectionToConnectionInfo(con))
     }

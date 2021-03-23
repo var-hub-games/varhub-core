@@ -16,6 +16,10 @@ import {staticRouter} from "./static/static.requests";
 
 export function createWebConnector(): Express {
 
+    app.ws("/ws", (ws, req) => {
+        console.log("WS WS", req.path, req.params);
+    });
+
     app.use(cors());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
@@ -24,6 +28,8 @@ export function createWebConnector(): Express {
         secret : 'varhubSession',
         cookie : {
             expires: false,
+            sameSite: "none",
+            secure: true,
         },
         resave: false,
         saveUninitialized: true

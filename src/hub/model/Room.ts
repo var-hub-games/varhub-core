@@ -2,17 +2,28 @@ import {VarHub} from "../VarHub";
 import {User} from "../../dao/model/User";
 import ws from 'ws';
 import {Connection} from "./Connection";
-import {UserJoinEvent, UserKnockEvent, UserLeaveEvent} from "./messages";
+import {
+    AnyMessageEvent,
+    RoomInfoEvent,
+    RoomStateChangedEvent,
+    UserJoinEvent,
+    UserKnockEvent,
+    UserLeaveEvent
+} from "./VarHubEvents";
 import {Door} from "./Door";
+import {Replacement, StateHandler} from "./StateHandler";
+import {ConnectionController} from "./ConnectionController";
+import {textCommandHandlers} from "./commandHandlers/textCommandHandlers";
+import {binCommandHandlers} from "./commandHandlers/binCommandHandlers";
 
 export class Room {
     readonly roomId: string // new room id
     readonly ownerId: string // UserInfo.id
     private permit = new Set<string>();
     readonly handlerUrl: string
-    state: any // any json*
     readonly connections = new Map<string, Connection>();
     readonly door: Door;
+    private readonly stateHandler = new StateHandler(null);
 
     constructor(private varHub: VarHub, userId: string, handlerUrl: string) {
         this.handlerUrl = handlerUrl;
@@ -23,6 +34,17 @@ export class Room {
 
     isPermittedFor(user: User): boolean{
         return this.permit.has(user.id);
+    }
+
+    getState(): any {
+        return this.stateHandler.getState();
+    }
+
+    replaceState(replacements: Replacement[]) {
+        this.stateHandler.applyReplacements(replacements);
+        for (const replacement of replacements) {
+            this.broadcastEvent(RoomStateChangedEvent(replacement.path, replacement.data));
+        }
     }
 
     setPermittedFor(user: User, value: boolean): boolean{
@@ -41,10 +63,14 @@ export class Room {
 
     connect(connection: Connection){
         this.removeConnection(connection.id, "reconnected");
+        this.broadcastEvent(UserJoinEvent(connection));
         this.connections.set(connection.id, connection);
-        this.broadcast(UserJoinEvent(connection));
-        // todo: send room data to connection
-        connection.ws.addEventListener("close", () => this.onDisconnect(connection));
+        connection.sendMessage(RoomInfoEvent(this, connection.account));
+        const controller = new ConnectionController(connection, this, textCommandHandlers, binCommandHandlers);
+        connection.ws.addEventListener("close", () => {
+            this.onDisconnect(connection);
+            controller.destroy();
+        });
     }
 
     private onDisconnect(connection: Connection){
@@ -52,22 +78,38 @@ export class Room {
     }
 
     knock(connection: Connection){
-        this.broadcast(UserKnockEvent(connection.account));
+        this.broadcastEvent(UserKnockEvent(connection.account));
     }
 
     removeConnection(connectionId: string, reason: string): boolean{
         const connection = this.connections.get(connectionId);
         if (!connection) return false;
         this.connections.delete(connectionId);
-        this.broadcast(UserLeaveEvent(connection));
+        this.broadcastEvent(UserLeaveEvent(connection));
         connection.destroy(reason);
         return true;
     }
 
-    private broadcast(message: any){
+    private broadcastEvent(message: any, exceptConnectionId?: string[]){
         for (const [, connection] of this.connections) {
+            if (exceptConnectionId && exceptConnectionId.includes(connection.id)) continue
             connection.sendMessage(message);
         }
+    }
+
+    sendMessage(
+        fromConnectionId: string, toConnectionIds: string[]|null, service: boolean, message: any
+    ): {[connectionId: string]: boolean} {
+        const result: {[connectionId: string]: boolean} = {};
+        if (toConnectionIds === null) toConnectionIds = [...this.connections.keys()];
+        const from = service ? null : fromConnectionId;
+        for (let toConnectionId of toConnectionIds) {
+            if (toConnectionId === fromConnectionId) continue;
+            const connection = this.connections.get(toConnectionId);
+            if (!connection) continue;
+            connection.sendMessage(AnyMessageEvent(from, message));
+        }
+        return result;
     }
 
     destroy(): void{

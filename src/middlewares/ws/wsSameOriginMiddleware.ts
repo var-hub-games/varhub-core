@@ -1,7 +1,6 @@
-import {tokenManager} from "../tokenManager";
 import {WebsocketRequestHandler} from "express-ws";
 
-export const sameOrigin: WebsocketRequestHandler = (ws, req, next) => {
+export const wsSameOrigin: WebsocketRequestHandler = (ws, req, next) => {
     let allowOrigin = false;
     try {
         const hostOrigin = new URL(req.protocol + "://" + req.header("host")).origin

@@ -5,8 +5,9 @@
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "buildWatch": "tsc --project tsconfig.json -w",
-    "nodemon": "nodemon --watch  dist",
-    "startDemon": "concurrently \\\"npm:buildWatch\\\" \\\"npm:nodemon\\\"",
+    "nodemon": "nodemon --watch ./dist/*.js --ignore ./dist/web/**/*",
+    "copyWebWatch": "copy-and-watch --clean --watch ./node_modules/@varhub-games/commutator/dist/**/* ./dist/web",
+    "startDemon": "concurrently \\\"npm:buildWatch\\\" \\\"npm:copyWebWatch\\\" \\\"npm:nodemon\\\" ",
     "start": "node dist/index.js"
   },
   "authors": [
@@ -20,6 +21,7 @@
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cookie-session": "^1.4.0",
+    "copy-and-watch": "^0.1.5",
     "cors": "^2.8.5",
     "crc-32": "^1.2.0",
     "express": "^4.17.1",

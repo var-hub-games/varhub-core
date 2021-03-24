@@ -2,5 +2,6 @@
 dist
 build
 node_modules
+sessions
 users.db
 rooms.db

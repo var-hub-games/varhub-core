@@ -3,6 +3,12 @@ import "./index";
 
 const port = 8088
 
-createWebConnector()["server"].listen(port, () => {
-    console.log(`Running at https://localhost:${port}/`)
+const params: Parameters<typeof createWebConnector>[0] = {
+    secure: process.env.VarHubSecure === "true",
+    proxy: process.env.VarHubProxy === "true"
+}
+
+console.log(`Start with params`, params);
+createWebConnector(params).listen(port, () => {
+    console.log(`Running at https://localhost:${port}/`);
 });

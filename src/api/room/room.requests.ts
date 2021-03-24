@@ -21,13 +21,11 @@ roomRouter.put('/', isAuth, (req: Request & {user: User}, res) => {
         const url = new URL(String(urlValue));
         if (!['http:','https:'].includes(url.protocol)) {
             res.statusCode = 400;
-            console.log("W2", url.protocol);
             return res.json('wrong parameter: handlerUrl');
         }
         urlHandler = url.href;
     } catch (error) {
         res.statusCode = 400;
-        console.log("W3", error);
         return res.json('wrong parameter: handlerUrl');
     }
 

@@ -30,7 +30,6 @@ const getUserById = async (id: string): Promise<User|null> => {
 const createUser = async (name: string, password: string): Promise<User> => {
     const data = await usersDB.insert({name, password});
     const user = User[MODEL_PARSE_SYMBOL](data);
-    console.log(user);
     return user
 }
 

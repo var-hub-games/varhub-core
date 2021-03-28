@@ -3,7 +3,6 @@ import {BinaryCommandHandler} from "./types";
 export const SendBinaryMessage: BinaryCommandHandler = async (
     connection, room, pData
 ): Promise<{[connectionId: string]: boolean}> => {
-    const result: {[connectionId: string]: boolean} = {};
     const userCount = pData.readUInt32BE(0);
     let offset = 0;
     const recipients: string[] = [];

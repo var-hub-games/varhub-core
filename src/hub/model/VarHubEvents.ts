@@ -10,6 +10,10 @@ export function RoomInfoEvent(room: Room, user: User): string{
     return VarHubEvent("RoomInfoEvent", roomToRoomOnlineInfo(room, user));
 }
 
+export function ConnectionInfoEvent(connection: Connection): string{
+    return VarHubEvent("ConnectionInfoEvent", connectionToConnectionInfo(connection));
+}
+
 export function UserJoinEvent(connection: Connection): string{
     return VarHubEvent("UserJoinEvent", connectionToConnectionInfo(connection));
 }
@@ -24,9 +28,14 @@ export function UserKnockEvent(user: IUserInfo): string{
 
 export function AnyMessageEvent<T extends Buffer|string>(fromConnection: string|null, message: T): T extends Buffer ? Buffer : string {
     if (message instanceof Buffer) {
-        const cidBuffer = fromConnection ? Buffer.from(fromConnection, "utf8") : Buffer.of();
-        const cidLength = Buffer.from(Uint32Array.of(cidBuffer.length).buffer);
-        return Buffer.concat([cidLength, cidBuffer, message]) as any;
+        if (fromConnection) {
+            const cidBuffer = Buffer.from(fromConnection, "utf8");
+            const cidLength = Buffer.from(Uint32Array.of(cidBuffer.length).buffer);
+            return Buffer.concat([cidLength, cidBuffer, message]) as any;
+        } else {
+            const cidLength = Buffer.from(Uint32Array.of(-1).buffer);
+            return Buffer.concat([cidLength, message]) as any;
+        }
     } else {
         return VarHubEvent("MessageEvent", {
             from: fromConnection,

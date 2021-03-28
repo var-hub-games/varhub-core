@@ -8,7 +8,8 @@ import {
     RoomStateChangedEvent,
     UserJoinEvent,
     UserKnockEvent,
-    UserLeaveEvent
+    UserLeaveEvent,
+    ConnectionInfoEvent
 } from "./VarHubEvents";
 import {Door} from "./Door";
 import {Replacement, StateHandler} from "./StateHandler";
@@ -58,6 +59,7 @@ export class Room {
 
     handleNewConnection(ws: ws, user: User, resource: string){
         const connection = new Connection(ws, user, this, resource);
+        connection.sendMessage(ConnectionInfoEvent(connection))
         this.door.enterConnection(connection);
     }
 

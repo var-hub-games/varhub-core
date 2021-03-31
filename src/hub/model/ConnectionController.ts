@@ -13,8 +13,8 @@ export class ConnectionController {
         private binCommandHandlers: Map<number, BinaryCommandHandler>
     ) {
         const ws = this.ws = connection.ws;
-        ws.on("close", () => this.destroy)
-        ws.on("message", (data) => this.handleMessage(data))
+        ws.on("close", () => this.destroy);
+        ws.on("message", (data) => this.handleMessage(data));
     }
 
     private async handleMessage(data: WebSocket.Data){

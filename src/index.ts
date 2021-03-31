@@ -1,6 +1,10 @@
 import {createWebConnector} from "./WebConnector";
 import "./index";
 
+try {
+    delete Object.prototype['__proto__'];
+} catch {}
+
 const port = 8088
 
 const params: Parameters<typeof createWebConnector>[0] = {

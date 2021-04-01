@@ -7,7 +7,6 @@ import {
     RoomInfoEvent,
     RoomStateChangedEvent,
     UserJoinEvent,
-    UserKnockEvent,
     UserLeaveEvent,
     ConnectionInfoEvent
 } from "./VarHubEvents";
@@ -79,10 +78,6 @@ export class Room {
         this.removeConnection(connection.id, "disconnected");
     }
 
-    knock(connection: Connection){
-        this.broadcastEvent(UserKnockEvent(connection.account));
-    }
-
     removeConnection(connectionId: string, reason: string): boolean{
         const connection = this.connections.get(connectionId);
         if (!connection) return false;
@@ -92,8 +87,16 @@ export class Room {
         return true;
     }
 
-    private broadcastEvent(message: any, exceptConnectionId?: string[]){
+    broadcastEvent(message: any, exceptConnectionId?: string[]){
         for (const [, connection] of this.connections) {
+            if (exceptConnectionId && exceptConnectionId.includes(connection.id)) continue
+            connection.sendMessage(message);
+        }
+    }
+
+    broadcastOwnerEvent(message: any, exceptConnectionId?: string[]){
+        for (const [, connection] of this.connections) {
+            if (connection.account.id !== this.ownerId) continue;
             if (exceptConnectionId && exceptConnectionId.includes(connection.id)) continue
             connection.sendMessage(message);
         }

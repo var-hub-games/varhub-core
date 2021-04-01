@@ -1,10 +1,11 @@
 import {Room} from "./Room";
 import {User} from "../../dao/model/User";
-import {roomToRoomOnlineInfo} from "../mapper/RoomMapper";
+import {doorToDoorInfo, roomToRoomOnlineInfo} from "../mapper/RoomMapper";
 import {Connection} from "./Connection";
 import {IUserInfo} from "./IUserInfo";
 import {userToUserInfo} from "../mapper/UserMapper";
 import {connectionToConnectionInfo} from "../mapper/ConnectionMapper";
+import {Door} from "./Door";
 
 export function RoomInfoEvent(room: Room, user: User): string{
     return VarHubEvent("RoomInfoEvent", roomToRoomOnlineInfo(room, user));
@@ -22,8 +23,8 @@ export function UserLeaveEvent(connection: Connection): string{
     return VarHubEvent("UserLeaveEvent", connectionToConnectionInfo(connection));
 }
 
-export function UserKnockEvent(user: IUserInfo): string{
-    return VarHubEvent("UserKnockEvent", userToUserInfo(user));
+export function DoorChangedEvent(door: Door): string{
+    return VarHubEvent("DoorChangedEvent", doorToDoorInfo(door));
 }
 
 export function AnyMessageEvent<T extends Buffer|string>(fromConnection: string|null, message: T): T extends Buffer ? Buffer : string {

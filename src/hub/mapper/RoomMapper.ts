@@ -1,6 +1,5 @@
 import {Room} from "../model/Room";
 import {User} from "../../dao/model/User";
-import {IDoor} from "../model/IDoor";
 import {connectionToConnectionInfo} from "./ConnectionMapper";
 import {Door} from "../model/Door";
 import {userToUserInfo} from "./UserMapper";

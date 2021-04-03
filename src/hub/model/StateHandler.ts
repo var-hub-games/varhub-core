@@ -85,7 +85,16 @@ export class StateHandler {
                         delete source[key];
                     }
                 } else {
-                    source[key] = value;
+                    if (typeof key === "number") {
+                        source[key] = value;
+                    } else {
+                        Object.defineProperty(source, key, {
+                            value: value,
+                            configurable: true,
+                            enumerable: true,
+                            writable: true
+                        });
+                    }
                 }
             }
         }

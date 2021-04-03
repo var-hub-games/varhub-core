@@ -266,10 +266,10 @@
   dependencies:
     "@types/node" "*"
 
-"@varhub-games/commutator@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@varhub-games/commutator/-/commutator-1.0.9.tgz#f19e2c14e2e370027ffad6f3a63e243c3a886876"
-  integrity sha512-HPo9Ghzn4Oss/zFtDQnfoWjMZ9ymm8mp6Baioy9majuXGhiwI21b3l1kowKhcrJyr/12Fl1zqyDPFSIxW8b+bA==
+"@varhub-games/commutator@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@varhub-games/commutator/-/commutator-1.1.0.tgz#01e6e051d97d1805d9fec0461f2d2a52c2f04e4d"
+  integrity sha512-PTpfKXh7I4js/wcqr0rKi4+uOFHDabchoHKBZ8By36qI3t6EIzhRUrbfALErZ/2mZuN71r4NKEiU1zT+G8SX1Q==
   dependencies:
     "@fortawesome/fontawesome-free" "^5.15.2"
     "@types/react-dom" "^17.0.1"

@@ -17,7 +17,7 @@
     "license": "ISC",
     "description": "Core of VARHUB",
     "dependencies": {
-        "@varhub-games/commutator": "^1.0.9",
+        "@varhub-games/commutator": "^1.1.0",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.5",
         "cookie-session": "^1.4.0",

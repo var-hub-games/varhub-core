@@ -3,7 +3,7 @@ name: CI
 # Controls when the action will run. 
 on:
   repository_dispatch:
-    types: [opened, deleted]
+    types: [commutator-update]
 
   workflow_dispatch:
 

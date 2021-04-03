@@ -22,7 +22,6 @@ jobs:
       
       - name: Setup Git & Commit 
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git commit -m "Commutator update to v${{ github.event.client_payload.version }}"" -a
       - name: Push changes

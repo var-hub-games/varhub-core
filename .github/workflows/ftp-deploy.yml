@@ -24,19 +24,6 @@ jobs:
           server: varhub.myxomopx.ru
           username: ${{ secrets.FTP_LOGIN }}
           password: ${{ secrets.FTP_PASSWORD }}
-          dangerous-clean-slate: true
           local-dir: ./dist/
           server-dir: dist/
-          
-      - name: Create Release and Tag
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        with:
-          tag_name: 'release_${{ steps.date.outputs.date }}'
-          release_name: 'Release ${{ steps.date.outputs.date }}'
-          draft: false
-          prerelease: false
-          
           

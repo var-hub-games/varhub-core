@@ -27,15 +27,16 @@ export function DoorChangedEvent(door: Door): string{
     return VarHubEvent("DoorChangedEvent", doorToDoorInfo(door));
 }
 
+const binaryMessageEventHeader = Buffer.from(Uint32Array.of(0x00002000).buffer);
 export function AnyMessageEvent<T extends Buffer|string>(fromConnection: string|null, message: T): T extends Buffer ? Buffer : string {
     if (message instanceof Buffer) {
         if (fromConnection) {
             const cidBuffer = Buffer.from(fromConnection, "utf8");
             const cidLength = Buffer.from(Uint32Array.of(cidBuffer.length).buffer);
-            return Buffer.concat([cidLength, cidBuffer, message]) as any;
+            return Buffer.concat([binaryMessageEventHeader, cidLength, cidBuffer, message]) as any;
         } else {
             const cidLength = Buffer.from(Uint32Array.of(-1).buffer);
-            return Buffer.concat([cidLength, message]) as any;
+            return Buffer.concat([binaryMessageEventHeader, cidLength, message]) as any;
         }
     } else {
         return VarHubEvent("MessageEvent", {

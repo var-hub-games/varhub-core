@@ -27,14 +27,14 @@ export class ConnectionController {
         const [methodName, responseId, ...args] = data.split("\n");
         const handler = this.commandHandlers.get(methodName);
         if (!handler) {
-            this.room.removeConnection(this.connection.id, "protocol error");
+            this.room.removeConnection(this.connection, "protocol error");
             return;
         }
         let parsedArgs;
         try {
             parsedArgs = args.map(arg => arg ? JSON.parse(arg) : undefined);
         } catch {
-            this.room.removeConnection(this.connection.id, "protocol error");
+            this.room.removeConnection(this.connection, "protocol error");
             return;
         }
         try {
@@ -63,12 +63,12 @@ export class ConnectionController {
     }
 
     private async handleBinMessage(data: Buffer){
-        const methodId = data.readInt32BE(0);
-        const responseId = data.readInt32BE(4);
+        const methodId = data.readUInt32LE(0);
+        const responseId = data.readUInt32LE(4);
         const messageData = data.slice(8);
         const handler = this.binCommandHandlers.get(methodId);
         if (!handler) {
-            this.room.removeConnection(this.connection.id, "protocol error");
+            this.room.removeConnection(this.connection, "protocol error");
             return;
         }
         try {

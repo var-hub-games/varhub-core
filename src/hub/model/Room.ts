@@ -63,11 +63,12 @@ export class Room {
     }
 
     connect(connection: Connection){
-        this.removeConnection(connection.id, "reconnected");
-        this.broadcastEvent(UserJoinEvent(connection));
+        const existingConnection = this.connections.get(connection.id);
+        if (existingConnection) this.removeConnection(existingConnection, "reconnected");
         this.connections.set(connection.id, connection);
-        connection.sendMessage(RoomInfoEvent(this, connection.account));
+        this.broadcastEvent(UserJoinEvent(connection));
         const controller = new ConnectionController(connection, this, textCommandHandlers, binCommandHandlers);
+        connection.sendMessage(RoomInfoEvent(this, connection.account));
         connection.ws.addEventListener("close", () => {
             this.onDisconnect(connection);
             controller.destroy();
@@ -75,13 +76,13 @@ export class Room {
     }
 
     private onDisconnect(connection: Connection){
-        this.removeConnection(connection.id, "disconnected");
+        this.removeConnection(connection, "disconnected");
     }
 
-    removeConnection(connectionId: string, reason: string): boolean{
-        const connection = this.connections.get(connectionId);
-        if (!connection) return false;
-        this.connections.delete(connectionId);
+    removeConnection(connection: Connection, reason: string): boolean{
+        const targetConnection = this.connections.get(connection.id);
+        if (connection !== targetConnection) return false;
+        this.connections.delete(connection.id);
         this.broadcastEvent(UserLeaveEvent(connection));
         connection.destroy(reason);
         return true;

@@ -87,6 +87,11 @@ export class Door implements IDoor {
                 connection.destroy("blocked");
             }
         }
+        for (let connection of this.room.connections.values()) {
+            if (connection.account.id === userId) {
+                this.room.removeConnection(connection, "blocked");
+            }
+        }
         this.room.broadcastOwnerEvent(DoorChangedEvent(this));
     }
 

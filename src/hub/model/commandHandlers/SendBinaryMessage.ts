@@ -3,11 +3,11 @@ import {BinaryCommandHandler} from "./types";
 export const SendBinaryMessage: BinaryCommandHandler = async (
     connection, room, pData
 ): Promise<{[connectionId: string]: boolean}> => {
-    const userCount = pData.readUInt32BE(0);
-    let offset = 0;
+    const userCount = pData.readInt32LE(0);
+    let offset = 4;
     const recipients: string[] = [];
     for (let i = 0; i < userCount; i++) {
-        const userNameLen = pData.readUInt32BE(offset);
+        const userNameLen = pData.readUInt32LE(offset);
         offset += 4;
         const userName = pData.slice(offset, offset+userNameLen).toString("utf8");
         offset += userNameLen;
@@ -19,5 +19,6 @@ export const SendBinaryMessage: BinaryCommandHandler = async (
         throw new Error("not permitted");
     }
     const message = pData.slice(offset);
-    return room.sendMessage(connection.id, recipients, asService, message);
+    const toConnections = userCount === -1 ? null : recipients;
+    return room.sendMessage(connection.id, toConnections, asService, message);
 }

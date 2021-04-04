@@ -28,7 +28,7 @@ export class Room {
     constructor(private varHub: VarHub, userId: string, handlerUrl: string) {
         this.handlerUrl = handlerUrl;
         this.ownerId = userId;
-        this.roomId = generateRoomId();
+        this.roomId = generateRoomId(new Set(this.connections.keys()));
         this.door = new Door(this);
     }
 
@@ -125,11 +125,18 @@ export class Room {
 }
 
 const ROOM_ID_SYMBOLS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const ROOM_ID_TEMPLATE = "___-___";
 
-const generateRoomId = () => {
-    // ToDo may be duplicates ID
-    return ROOM_ID_TEMPLATE.replace(/[_]/g, (c) => {
+const generateRoomId = (occupied: Set<string>) => {
+    let template = "___-___"
+    while (true) {
+        const id = replaceTemplate(template);
+        if (!occupied.has(id)) return id;
+        template += "-___";
+    }
+}
+
+function replaceTemplate(template: string) {
+    return template.replace(/[_]/g, (c) => {
         if (c === "-") return c;
         const i = Math.floor(Math.random() * ROOM_ID_SYMBOLS.length)
         return ROOM_ID_SYMBOLS[i];

@@ -7,7 +7,9 @@
     "buildWatch": "tsc --project tsconfig.json -w",
     "nodemon": "nodemon --watch ./dist/*.js --ignore ./dist/web/**/*",
     "copyWebWatch": "copy-and-watch --clean --watch ./node_modules/@varhub-games/commutator/dist/**/* ./dist/web",
-    "startDemon": "concurrently \\\"npm:buildWatch\\\" \\\"npm:copyWebWatch\\\" \\\"npm:nodemon\\\" ",
+    "copyWeb": "copy-and-watch --clean ./node_modules/@varhub-games/commutator/dist/**/* ./dist/web",
+    "startDemon": "npm run copyWeb && concurrently \\\"npm:buildWatch\\\" \\\"npm:nodemon\\\" ",
+    "postinstall": "npm run build && npm run copyWeb",
     "start": "node dist/index.js"
   },
   "authors": [

@@ -56,17 +56,19 @@ export class StateHandler {
             let lastStep: string|number|undefined = undefined;
             if (path.length > 0) {
                 const sourcePath = path.slice(0, path.length - 1);
-                const lastStep = path[path.length - 1];
+                lastStep = path[path.length - 1];
                 source = this.select(sourcePath);
                 replaceValue = this.select([lastStep], source);
             } else {
                 replaceValue = this.state;
             }
             if (hash != null) {
-                if (source === undefined) {
-                    if (hash !== 0) throw new Error("hash error");
+                if (replaceValue === undefined) {
+                    if (hash !== 0) {
+                        throw new Error("hash error");
+                    }
                 } else {
-                    if (CRC32.str(stableStringify(source)) !== hash) {
+                    if (CRC32.str(stableStringify(replaceValue)) !== hash) {
                         throw new Error("hash error");
                     }
                 }

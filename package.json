@@ -1,6 +1,6 @@
 {
     "name": "@varhub-games/varhub-core",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "main": "dist/index.js",
     "scripts": {
         "build": "tsc --project tsconfig.json",
@@ -19,7 +19,7 @@
     "license": "ISC",
     "description": "Core of VARHUB",
     "dependencies": {
-        "@varhub-games/commutator": "^1.1.2",
+        "@varhub-games/commutator": "^1.1.3",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.5",
         "cookie-session": "^1.4.0",

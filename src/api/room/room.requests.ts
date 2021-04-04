@@ -31,6 +31,7 @@ roomRouter.put('/', isAuth, (req: Request & {user: User}, res) => {
 
     try {
         const room = varHub.createRoom(req.user.id, urlHandler);
+        room.setPermittedFor(req.user, true);
         res.json(RoomMapper.roomToRoomInfo(room, req.user));
         console.log(`[CreateRoom] ${req.ip} as ${req.user.name} SUCCESS: ${room.roomId} ${room.handlerUrl}`);
     } catch (error) {

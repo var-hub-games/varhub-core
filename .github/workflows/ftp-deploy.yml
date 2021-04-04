@@ -16,8 +16,18 @@ jobs:
 
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%d-%m-%Y')"
-      
+        run: echo "::set-output name=date::$(date +'%d-%m-%YT%H:%M:%S'))"
+          
+      - name: 📂 FTP - Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: varhub.myxomopx.ru
+          username: ${{ secrets.FTP_LOGIN }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          dangerous-clean-slate: true
+          local-dir: ./dist/
+          server-dir: dist
+          
       - name: Create Release and Tag
         id: create_release
         uses: actions/create-release@latest
@@ -28,16 +38,5 @@ jobs:
           release_name: 'Release ${{ steps.date.outputs.date }}'
           draft: false
           prerelease: false
-          
-      - name: 📂 FTP - Deploy
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          server: varhub.myxomopx.ru
-          username: ${{ secrets.FTP_LOGIN }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          dangerous-clean-slate: true
-          local-dir: ./dist/
-          server-dir: ./dist/
-          
           
           

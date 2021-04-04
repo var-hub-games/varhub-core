@@ -1,0 +1,48 @@
+name: Deploy Production (FTP)
+
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - run: npm install
+
+      - uses: MYXOMOPX/modify-pkg-json@1.0.1
+        id: pkgver
+        with:
+          action: get_version
+      
+      
+      - uses: MYXOMOPX/modify-pkg-json@1.0.1
+        id: comver
+        with:
+          action: get_dep_version
+          argument: '@varhub-games/commutator' 
+      
+      - name: Create Release and Tag
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          tag_name: v${{ steps.pkgver.outputs.result }} (Com v${{ steps.comver.outputs.result }})
+          release_name: Release ${{ steps.pkgver.outputs.result }} (Com v${{ steps.comver.outputs.result }})
+          draft: false
+          prerelease: false
+          
+      - name: 📂 FTP - Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: varhub.myxomopx.ru
+          username: ${{ secrets.FTP_LOGIN }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          dangerous-clean-slate: true
+          local-dir: dist
+          server-dir: dist

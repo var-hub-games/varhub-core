@@ -1,0 +1,31 @@
+name: Update commutator
+
+# Controls when the action will run. 
+on:
+  repository_dispatch:
+    types: [commutator-update]
+
+  workflow_dispatch: # manual execution
+  
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2      
+      
+      - uses: MYXOMOPX/modify-pkg-json@master
+        with:
+          # Path to package.json
+          target: ./package.json
+          # Action to perform
+          action: "set_dep_version"
+          argument: "@varhub-games/commutator ^${{ github.event.client_payload.version }}"
+      
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: '[Commutator update] v${{ github.event.client_payload.version }}'
+          commit_user_name: GithubActionBot # defaults to "GitHub Actions"
+          commit_author: GithubActionBot <myxom.opx@gmail.com> # defaults to author of the commit that triggered the run
+          tagging_message: 'commutator_v${{ github.event.client_payload.version }}'
+          skip_dirty_check: true    

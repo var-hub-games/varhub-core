@@ -1,13 +1,9 @@
 import {Request, Router} from "express";
 import expressWs from "express-ws";
-import {UseTokenUser} from "../../middlewares/ws/wsTokenMiddleware";
 import {User} from "../../dao/model/User";
-import {sameOrigin} from "../../middlewares/ws/wsSameOriginMiddleware";
-import {isAuth} from "../../middlewares/authMiddleware";
 import {varHub} from "../../hub/VarHub";
 import * as RoomMapper from "../../hub/mapper/RoomMapper";
 import {Room} from "../../hub/model/Room";
-import {roomRouter} from "./room.requests";
 
 
 export const roomIdRouter: expressWs.Router = Router();

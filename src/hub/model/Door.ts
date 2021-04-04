@@ -2,6 +2,7 @@ import {IDoor, DOOR_MODE} from "./IDoor";
 import {IConnectionInfo} from "./IConnectionInfo";
 import {Room} from "./Room";
 import {Connection} from "./Connection";
+import {DoorChangedEvent} from "./VarHubEvents";
 
 export class Door implements IDoor {
 
@@ -10,14 +11,14 @@ export class Door implements IDoor {
     readonly blockIds = new Set<string>();
     readonly knockConnections = new Map<string, Set<Connection>>();
 
-    public readonly id: string
-
     constructor(
         public readonly room: Room,
     ) {}
 
     setMode(mode: DOOR_MODE){
+        if (this.mode === mode) return;
         this.mode = mode;
+        this.room.broadcastOwnerEvent(DoorChangedEvent(this));
     }
 
     enterConnection(connection: Connection): void{
@@ -55,11 +56,12 @@ export class Door implements IDoor {
         if (connections.size === 0) {
             this.knockConnections.delete(userId);
         }
+        this.room.broadcastOwnerEvent(DoorChangedEvent(this));
     }
 
     private knockAndWait(connection: Connection){
         this.addKnockConnection(connection);
-        this.room.knock(connection);
+        this.room.broadcastOwnerEvent(DoorChangedEvent(this));
     }
 
     allowUserId(userId: string){
@@ -72,6 +74,7 @@ export class Door implements IDoor {
                 this.room.connect(connection);
             }
         }
+        this.room.broadcastOwnerEvent(DoorChangedEvent(this));
     }
 
     blockUserId(userId: string){
@@ -84,6 +87,7 @@ export class Door implements IDoor {
                 connection.destroy("blocked");
             }
         }
+        this.room.broadcastOwnerEvent(DoorChangedEvent(this));
     }
 
 }

@@ -1,5 +1,6 @@
 import {Room} from "./model/Room";
 import {User} from "../dao/model/User";
+import {BinaryCommandHandler, CommandHandler} from "./model/commandHandlers/types";
 
 export class VarHub {
 

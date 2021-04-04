@@ -1,7 +1,8 @@
 import {Room} from "../model/Room";
 import {User} from "../../dao/model/User";
-import {IDoor} from "../model/IDoor";
 import {connectionToConnectionInfo} from "./ConnectionMapper";
+import {Door} from "../model/Door";
+import {userToUserInfo} from "./UserMapper";
 
 export const roomToRoomInfo = (room: Room, owner: User) => {
     return {
@@ -14,17 +15,24 @@ export const roomToRoomInfo = (room: Room, owner: User) => {
 export const roomToRoomOnlineInfo = (room: Room, owner: User) => {
     return {
         ...roomToRoomInfo(room, owner),
-        state: room.state,
-        door: doorToDoorInfo(room.door),
+        state: room.getState(),
+        door: room.ownerId === owner.id ? doorToDoorInfo(room.door) : null,
         users: [...room.connections.values()].map(con => connectionToConnectionInfo(con))
     }
 }
 
-export const doorToDoorInfo = (door: IDoor|null) => {
+export const doorToDoorInfo = (door: Door|null) => {
     if (!door) return null;
     return {
         mode: door.mode,
         allowlist: [...door.allowIds],
         blocklist: [...door.blockIds],
+        knock: Array.from(door.knockConnections.values()).map((connectionSet) => {
+            return Array.from(connectionSet.values())[0]
+        }).filter(connection => {
+            return connection != undefined;
+        }).map(connection => {
+            return userToUserInfo(connection.account);
+        })
     }
 }

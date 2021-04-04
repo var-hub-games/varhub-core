@@ -13,8 +13,8 @@ export class ConnectionController {
         private binCommandHandlers: Map<number, BinaryCommandHandler>
     ) {
         const ws = this.ws = connection.ws;
-        ws.on("close", () => this.destroy)
-        ws.on("message", (data) => this.handleMessage(data))
+        ws.on("close", () => this.destroy);
+        ws.on("message", (data) => this.handleMessage(data));
     }
 
     private async handleMessage(data: WebSocket.Data){
@@ -32,7 +32,7 @@ export class ConnectionController {
         }
         let parsedArgs;
         try {
-            parsedArgs = args.map(arg => JSON.stringify(arg));
+            parsedArgs = args.map(arg => arg ? JSON.parse(arg) : undefined);
         } catch {
             this.room.removeConnection(this.connection.id, "protocol error");
             return;
@@ -109,7 +109,7 @@ export class ConnectionController {
         this.ws.send(head + '\n' + data);
     }
 
-    private destroy(){}
+    destroy(){}
 }
 
 const successCodeData = Buffer.from(Uint32Array.of(0x00004000).buffer);

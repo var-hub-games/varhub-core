@@ -9,7 +9,6 @@ passport.use(new LocalStrategy({
         passwordField: 'password',
     },async function(name, password, done) {
         const user = await databaseService.getUserByName(name);
-        console.log("TRYING GET USER",name,user);
         if (!user) {
             done(null, false, {message: "User not exists"})
             return;

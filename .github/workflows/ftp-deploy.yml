@@ -4,6 +4,8 @@ name: Deploy Production (FTP)
 on:
   push:
     branches: [ master ]
+    
+  workflow_dispatch: # manual execution
 
 jobs:
   publish:

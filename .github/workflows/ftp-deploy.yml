@@ -32,8 +32,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
-          tag_name: v${{ steps.pkgver.outputs.result }}__(Com-v${{ steps.comver.outputs.result }})
-          release_name: Release ${{ steps.pkgver.outputs.result }} (Com v${{ steps.comver.outputs.result }})
+          tag_name: 'v${{ steps.pkgver.outputs.result }}__(Com-v${{ steps.comver.outputs.result }})'
+          release_name: 'Release ${{ steps.pkgver.outputs.result }} (Com v${{ steps.comver.outputs.result }})'
           draft: false
           prerelease: false
           
@@ -44,5 +44,8 @@ jobs:
           username: ${{ secrets.FTP_LOGIN }}
           password: ${{ secrets.FTP_PASSWORD }}
           dangerous-clean-slate: true
-          local-dir: dist
-          server-dir: dist
+          local-dir: ./dist/
+          server-dir: ./dist/
+          
+          
+          

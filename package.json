@@ -8,7 +8,7 @@
         "buildWatch": "tsc --project tsconfig.json -w",
         "nodemon": "nodemon --watch ./dist/*.js --ignore ./dist/web/**/*",
         "copyWebWatch": "copy-and-watch --clean --watch ./node_modules/@varhub-games/commutator/dist/**/* ./dist/web",
-        "copyWeb": "copy-and-watch ./node_modules/@varhub-games/commutator/dist/* ./dist/web && copy-and-watch ./node_modules/@varhub-games/commutator/dist/**/* ./dist/web",
+        "copyWeb": "copyfiles --all --follow --up 4 \"./node_modules/@varhub-games/commutator/dist/**/*\" ./dist/web",
         "startDemon": "npm run copyWeb && concurrently \\\"npm:buildWatch\\\" \\\"npm:nodemon\\\" ",
         "postinstall": "npm run buildBundle && npm run copyWeb",
         "start": "node dist/index.js"
@@ -50,6 +50,7 @@
         "@types/passport-local": "^1.0.33",
         "@types/ws": "^7.4.0",
         "concurrently": "^5.3.0",
+        "copyfiles": "^2.4.1",
         "husky": "^5.0.9",
         "nodemon": "^2.0.7",
         "rimraf": "^3.0.2",

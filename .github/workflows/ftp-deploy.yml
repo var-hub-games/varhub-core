@@ -14,17 +14,9 @@ jobs:
       
       - run: npm install
 
-      - uses: MYXOMOPX/modify-pkg-json@1.0.1
-        id: pkgver
-        with:
-          action: get_version
-      
-      
-      - uses: MYXOMOPX/modify-pkg-json@1.0.1
-        id: comver
-        with:
-          action: get_dep_version
-          argument: '@varhub-games/commutator' 
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%d-%m-%Y')"
       
       - name: Create Release and Tag
         id: create_release
@@ -32,8 +24,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
-          tag_name: 'v${{ steps.pkgver.outputs.result }}__(Com-v${{ steps.comver.outputs.result }})'
-          release_name: 'Release ${{ steps.pkgver.outputs.result }} (Com v${{ steps.comver.outputs.result }})'
+          tag_name: 'release_${{ steps.date.outputs.date }}'
+          release_name: 'Release ${{ steps.date.outputs.date }}'
           draft: false
           prerelease: false
           

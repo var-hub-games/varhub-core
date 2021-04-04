@@ -4,12 +4,13 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "tsc --project tsconfig.json",
+        "buildBundle": "ncc build src/index.ts -o dist",
         "buildWatch": "tsc --project tsconfig.json -w",
         "nodemon": "nodemon --watch ./dist/*.js --ignore ./dist/web/**/*",
         "copyWebWatch": "copy-and-watch --clean --watch ./node_modules/@varhub-games/commutator/dist/**/* ./dist/web",
         "copyWeb": "copy-and-watch --clean ./node_modules/@varhub-games/commutator/dist/**/* ./dist/web",
         "startDemon": "npm run copyWeb && concurrently \\\"npm:buildWatch\\\" \\\"npm:nodemon\\\" ",
-        "postinstall": "npm run build && npm run copyWeb",
+        "postinstall": "npm run buildBundle && npm run copyWeb",
         "start": "node dist/index.js"
     },
     "authors": [
@@ -20,6 +21,7 @@
     "description": "Core of VARHUB",
     "dependencies": {
         "@varhub-games/commutator": "^1.1.3",
+        "@vercel/ncc": "^0.27.0",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.5",
         "cookie-session": "^1.4.0",

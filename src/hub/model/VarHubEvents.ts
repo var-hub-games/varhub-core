@@ -2,8 +2,6 @@ import {Room} from "./Room";
 import {User} from "../../dao/model/User";
 import {doorToDoorInfo, roomToRoomOnlineInfo} from "../mapper/RoomMapper";
 import {Connection} from "./Connection";
-import {IUserInfo} from "./IUserInfo";
-import {userToUserInfo} from "../mapper/UserMapper";
 import {connectionToConnectionInfo} from "../mapper/ConnectionMapper";
 import {Door} from "./Door";
 
@@ -11,8 +9,14 @@ export function RoomInfoEvent(room: Room, user: User): string{
     return VarHubEvent("RoomInfoEvent", roomToRoomOnlineInfo(room, user));
 }
 
-export function ConnectionInfoEvent(connection: Connection): string{
-    return VarHubEvent("ConnectionInfoEvent", connectionToConnectionInfo(connection));
+export function ConnectionInfoEvent(connection: Connection): string {
+    const [s, ns] = process.hrtime(connection.room.hrTime);
+    const syncTimeMs = s*1000 + ns/1000000;
+    const data = {
+        ...connectionToConnectionInfo(connection),
+        syncTimeMs
+    }
+    return VarHubEvent("ConnectionInfoEvent", data);
 }
 
 export function UserJoinEvent(connection: Connection): string{

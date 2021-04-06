@@ -22,6 +22,7 @@ export class Room {
     private permit = new Set<string>();
     readonly handlerUrl: string
     readonly connections = new Map<string, Connection>();
+    readonly hrTime = process.hrtime();
     readonly door: Door;
     private readonly stateHandler = new StateHandler(null);
 

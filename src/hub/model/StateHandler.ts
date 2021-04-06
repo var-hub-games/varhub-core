@@ -35,11 +35,18 @@ export class StateHandler {
             if (state == null) throw new Error("wrong path selector");
             if (Array.isArray(state)) {
                 if (typeof step !== "number") throw new Error("wrong path selector");
-            } else {
+                state = state[step]
+            } else if (state && typeof state === "object") {
                 if (typeof step !== "string") throw new Error("wrong path selector");
-                if (!Object.prototype.hasOwnProperty.call(state, step)) throw new Error("wrong path selector");
+                // prevent prototype pollution for objects
+                if (Object.prototype.hasOwnProperty.call(state, step)) {
+                    state = state[step]
+                } else {
+                    state = undefined
+                }
+            } else {
+                throw new Error("wrong path selector");
             }
-            state = state[step];
         }
         return state;
     }
@@ -49,6 +56,7 @@ export class StateHandler {
         if (!isValidPaths(paths)) throw new Error("path intersect error");
         // create tasks to change state:
         const tasks: Set<ModifierTask> = new Set();
+
         for (let replacement of replacements) {
             const {path, data, hash} = replacement;
             let source: any = undefined;
@@ -90,6 +98,7 @@ export class StateHandler {
                     if (typeof key === "number") {
                         source[key] = value;
                     } else {
+                        // prevent prototype pollution for objects
                         Object.defineProperty(source, key, {
                             value: value,
                             configurable: true,

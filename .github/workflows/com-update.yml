@@ -29,3 +29,11 @@ jobs:
           commit_author: GithubActionBot <myxom.opx@gmail.com> # defaults to author of the commit that triggered the run
           tagging_message: 'commutator_v${{ github.event.client_payload.version }}'
           skip_dirty_check: true    
+          
+      - name: Dispatch commutator update
+        id: updater
+        uses: peter-evans/repository-dispatch@v1.1.3
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          repository: 'var-hub-games/varhub-server-docker'
+          event-type: 'varhub-core'

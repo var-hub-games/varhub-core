@@ -1,7 +1,7 @@
 import {createWebConnector} from "./WebConnector";
 import "./index";
 
-const port = 8088
+const port = process.env.VarHubPort || 8088;
 
 const params: Parameters<typeof createWebConnector>[0] = {
     secure: process.env.VarHubSecure === "true",

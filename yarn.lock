@@ -266,9 +266,9 @@
   dependencies:
     "@types/node" "*"
 
-"@varhub-games/commutator@^1.1.3":
+"@varhub-games/commutator@^1.1.4":
   version "1.1.3"
-  resolved "https://registry.npmjs.org/@varhub-games/commutator/-/commutator-1.1.3.tgz"
+  resolved "https://registry.yarnpkg.com/@varhub-games/commutator/-/commutator-1.1.3.tgz#3e93ec3bbb4ba31a6713d406dcc779ef11f2fa26"
   integrity sha512-q49QetIXHAHXZCVjnIiLZAUcWqYZin43xfvLFEwrJKXdXLodoWYTDOyUH0/eftFLmVtLoVQm9zjFWpMx4L/e0A==
   dependencies:
     "@fortawesome/fontawesome-free" "^5.15.2"
